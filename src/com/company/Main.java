@@ -3,11 +3,11 @@ package com.company;
 import java.util.Random;
 
 public class Main {
-    public static int bossHealth = 900;
+    public static int bossHealth = 1500;
     public static int bossDamage = 50; // наносит урон
     public static String bossDefenceType = ""; // тип защиты
 
-    public static int[] heroesHealths = {250, 250, 250};
+    public static int[] heroesHealths = {200, 200, 200};
     public static int[] heroesDamages = {20, 20, 20};
     public static String[] heroesAttackTypes = {"Physical", "Magical", "Kinetic"}; // типы аттаки
 
@@ -17,6 +17,36 @@ public class Main {
     public static int tankHealth = 150;
     public static int tankDamages = 10;
 
+    public static int slickHealth = 120;
+
+    public static int berserkHealth = 90;
+    public static int berserkDamages = bossDamage / 2 + 5;
+
+    public static void berserkBlocking() {
+        bossHealth = bossHealth - berserkDamages;
+        berserkHealth = berserkHealth - bossDamage / 2;
+    }
+
+    public static void setTor() {
+        Random r = new Random();
+        int randomNumber = r.nextInt(2);
+        if (randomNumber == 0) {
+            bossDamage = 0;
+            System.out.println("Босс оглушен");
+        } else
+            bossDamage = 50;
+    }
+
+    public static void slickDodging() {
+        Random r = new Random();
+        int randomNumber = r.nextInt(2);
+        if (randomNumber == 0) {
+            slickHealth = slickHealth - bossDamage;
+        } else {
+            slickHealth = (slickHealth - bossDamage) + bossDamage;
+        }
+    }
+
     public static void changeBossDefence() {
         Random r = new Random();
         int randomIndex = r.nextInt(heroesAttackTypes.length);
@@ -24,11 +54,14 @@ public class Main {
     }
 
     public static void round() {
+        setTor();
         changeBossDefence();
         heroesHit();
         if (doctorsHealth > 0) {
             setDoctorsCure();
         }
+        slickDodging();
+        berserkBlocking();
         if (bossHealth > 0) {
             bossHit();
         }
@@ -37,7 +70,7 @@ public class Main {
 
     public static void printStatistics() {
         System.out.println("_____________________________________");
-        if(bossHealth > 0){
+        if (bossHealth > 0) {
             System.out.println("Boss health: " + bossHealth);
         } else {
             System.out.println("Босс убит");
@@ -49,15 +82,26 @@ public class Main {
                 System.out.println("Герои убиты");
             }
         }
-        if (doctorsHealth > 0){
+        if (doctorsHealth > 0) {
             System.out.println("Doctor`s health: " + doctorsHealth);
         } else {
             System.out.println("Доктор убит");
         }
-        if (tankHealth > 0){
+        if (tankHealth > 0) {
             System.out.println("Tank`s health: " + tankHealth);
         } else
             System.out.println("Танкист убит");
+        if (slickHealth > 0) {
+            System.out.println("Slick`s health: " + slickHealth);
+        } else {
+            System.out.println("Ловкач убит");
+        }
+
+        if (berserkHealth > 0) {
+            System.out.println("Bersersks`s health: " + berserkHealth);
+        } else {
+            System.out.println("Берсерк убит");
+        }
 
         System.out.println("______________________________________");
     }
@@ -87,7 +131,7 @@ public class Main {
             heroesHealths[i] = heroesHealths[i] - bossDamage / 2;
         }
         doctorsHealth = doctorsHealth - bossDamage;
-        tankHealth = tankHealth - bossDamage/2;
+        tankHealth = tankHealth - bossDamage / 2;
     }
 
     public static void main(String[] args) {
